@@ -1,10 +1,10 @@
-import { useRef, useState } from 'react';
+import { useRef, useState } from "react";
 
-import Card from '../ui/Card';
-import classes from './NewPhotoForm.module.css';
+import Card from "../ui/Card";
+import classes from "./NewPhotoForm.module.css";
 
-import storage from '../../firebaseConfig';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
+import {storage} from "../../firebaseConfig";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 
 function NewPhotoForm(props) {
   const titleInputRef = useRef();
@@ -12,42 +12,38 @@ function NewPhotoForm(props) {
   const addressInputRef = useRef();
   const descriptionInputRef = useRef();
 
-/*tutaj dodaje*/
-const [file, setFile] = useState("");
-const [percent, setPercent] = useState(0);
+  /*tutaj dodaje*/
+  const [image, setImage] = useState(null);
+  const [url, setUrl] = useState(null)
 
-function handleFileUpload(event) {
-  setFile(event.target.files[0]);
-}
+  const handleImageChange = (e) => {
+      if(e.target.files[0]) {
+        setImage(e.target.files[0])
+      }
+  };
 
-const handleUpload = () => {
-  if (!file) {
-    alert("Please upload an image!");
-  }
-}
+  console.log(image)
 
-const storageRef = ref(storage, `/files/${file.name}`);
-
-const uploadTask = uploadBytesResumable(storageRef, file);
-
-uploadTask.on(
-  "state changed",
-  (snapshot) => {
-    const percent = Math.round(
-      (snapshot.bytesTransferred / snapshot.totalBytes)*100
-    );
-    setPercent(percent)
-  },
-  (err) => console.log(err),
-  () => {
-    getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-      console.log(URL)
-    });
-  }
-);
+  const handleUpload = () => {
+    const imageRef = ref(storage, "image");
+    uploadBytes(imageRef, image)
+      .then(() => {
+        getDownloadURL(imageRef)
+          .then((url) => {
+            setUrl(url);
+          })
+          .catch((error) => {
+            console.log(error.message, "error getting the image URL!");
+          });
+        setImage(null);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
 
 
-/*tutaj dodaje*/
+  /*tutaj dodaje*/
 
   function submitHandler(event) {
     event.preventDefault();
@@ -64,39 +60,46 @@ uploadTask.on(
       description: enteredDescription,
     };
 
-    props.onAddPhoto(photoData)
+    props.onAddPhoto(photoData);
   }
 
   return (
     <Card>
       <form className={classes.form} onSubmit={submitHandler}>
         <div className={classes.control}>
-          <label htmlFor='title'>Title</label>
-          <input type='text' required id='title' ref={titleInputRef} />
+          <label htmlFor="title">Title</label>
+          <input type="text" required id="title" ref={titleInputRef} />
         </div>
         <div className={classes.control}>
-          <label htmlFor='photo'>Photo</label>
+          <label htmlFor="photo">Photo</label>
           {/* <input type='url' required id='photo' ref={photoInputRef} /> */}
-          <input type="file" required id='photo' ref={photoInputRef} accept="image/*" onChange={handleFileUpload}/>
-        </div>
-        <div className={classes.control}>
-          <label htmlFor='address'>Address</label>
-          <input type='text' required id='address' ref={addressInputRef} />
-        </div>
-        <div className={classes.control}>
-          <label htmlFor='description'>Description</label>
-          <textarea
-            id='description'
+          <input
+            type="file"
             required
-            rows='5'
+            id="photo"
+            ref={photoInputRef}
+            accept="image/*"
+            onChange={handleImageChange}
+          />
+        </div>
+        <div className={classes.control}>
+          <label htmlFor="address">Address</label>
+          <input type="text" required id="address" ref={addressInputRef} />
+        </div>
+        <div className={classes.control}>
+          <label htmlFor="description">Description</label>
+          <textarea
+            id="description"
+            required
+            rows="5"
             ref={descriptionInputRef}
           ></textarea>
         </div>
         <div className={classes.actions}>
-          <button type='submit' onClick={handleUpload}>Add new photo</button>
+          <button type="submit" onClick={handleUpload}>
+            Add new photo
+          </button>
           {/* dodalem onClicka i paragraf */}
-          <p> {percent} % done</p>
-
         </div>
       </form>
     </Card>
