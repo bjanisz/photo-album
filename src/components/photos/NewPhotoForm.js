@@ -46,6 +46,7 @@ uploadTask.on(
   }
 );
 
+
 /*tutaj dodaje*/
 
   function submitHandler(event) {
@@ -94,7 +95,7 @@ uploadTask.on(
         <div className={classes.actions}>
           <button type='submit' onClick={handleUpload}>Add new photo</button>
           {/* dodalem onClicka i paragraf */}
-          <p> {percent} "% done"</p>
+          <p> {percent} % done</p>
 
         </div>
       </form>
