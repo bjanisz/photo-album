@@ -1,0 +1,59 @@
+.item {
+    margin: 1rem 0;
+  }
+  
+  .image {
+    width: 100%;
+    height: 20rem;
+    overflow: hidden;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+    border-top: 2px solid #10035c;
+    border-right: 2px solid #10035c;
+    border-left: 2px solid #10035c;
+  }
+  
+  .image img {
+    width: 100%;
+    object-fit: cover;
+  }
+  
+  .content {
+    text-align: center;
+    padding: 1rem;
+    border-top: 2px solid #10035c;
+    border-right: 2px solid #10035c;
+    border-left: 2px solid #10035c;
+  }
+  
+  .content h3 {
+    font-size: 1.25rem;
+    color: #2c292b;
+  }
+  
+  .actions {
+    padding: 1.5rem;
+    text-align: center;
+    border-bottom: 2px solid #10035c;
+    border-right: 2px solid #10035c;
+    border-left: 2px solid #10035c;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
+  
+  .actions button {
+    font: inherit;
+    cursor: pointer;
+    color: #d0d323;
+    border: 1px solid #d0d323;
+    background-color: #10035c;
+    padding: 0.5rem 1.5rem;
+    border-radius: 4px;
+  }
+  
+  .actions button:hover,
+  .actions button:active {
+    background-color: #d0d323;
+    border: solid 1px #10035c;
+    color:#10035c;
+  }
